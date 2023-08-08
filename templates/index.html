@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>OCR</title>
+</head>
+
+<style>
+    nav {
+        position: fixed;
+        top:0px;
+        left: 0px;
+        background-color: #cbd3e0;
+        height: 50px;
+        width: 100%;
+        padding-left: 50px;
+        padding-bottom: 9px;
+        box-shadow:5px 5px 9px rgba(94,104,121,0.3);
+        font-family: textaalt;
+    }
+
+    nav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        position: relative;
+    }
+
+    nav li {
+        display: inline-block;
+        border-radius: 5px;
+        margin-right: 20px;
+    }
+
+    nav li a {
+        border-radius: 5px;
+        color: #000000;
+        text-decoration: none;
+        padding: 15px;
+        display: inline-block;
+    }
+
+    #current-tab-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: #fff;
+        /* height: 10px; */
+        width: 0;
+        transition: width 0.3s ease-in-out;
+    }
+
+    nav li.active a {
+        background:  #dde1e7;
+        font-size: 20px;
+        box-shadow:-5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+    }
+
+    nav li.active #current-tab-indicator {
+        width: 100%;
+    }
+
+    body{
+        /* height: 100vh; */
+        width: 100%;
+        background: url(/static/Background1.png);
+        /* background:  #dde1e7; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* overflow-y: hidden; */
+        overflow-x: hidden;
+    }
+    body::-webkit-scrollbar{
+        width: 1px;
+    }
+    .inputt{
+        height: 50px;
+        margin-bottom: 25px;
+    }
+    .bcontainer{
+        width: 700px;
+        height: 400px;
+        padding: 50px;
+        background: #dde1e7;
+        border-radius: 20px;
+        /* margin-left: 130px;
+        margin-bottom: 50px;
+        margin-right: 50px;
+        margin-top: 150px; */
+        padding: 20px;
+        align-content: center;
+        box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+    } 
+    .scontainer{
+        font-family: textaalt;
+        display: inline-block;
+        width: 88%;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        padding: 15px 0px 20px 20px;
+        box-sizing: border-box;
+        box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);
+    }
+    .file-button{
+        font-family: textaalt;
+        background: #dde1e7;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding: 5px;
+        padding: 15px 15px 20px 15px;
+        box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3);
+    }
+    .file-button:hover{
+        box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);
+    }
+    .submit:hover{
+        box-shadow:5px 5px 10px #bcbcbc,-5px -5px 10px #ffffff;
+        background:linear-gradient(145deg, #8ac8fe, #4eaafb);
+        /* box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3); */
+        /* box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3); */
+    }
+    .submit{
+        font-size: 15px;
+        width: 30%;
+        border: none;
+        margin-top: 40px;
+        font-family: textaalt;
+        background: #8ac8fe;
+        border-radius: 10px;
+        margin-top: 10ps;
+        padding: 5px;
+        padding: 10px 15px 10px 15px;
+        /* box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3); */
+    }
+    @font-face {
+        font-family: textaalt;
+        src: url('/static/TextaAltMedium.ttf');
+    }
+    #op{
+        font-family: textaalt;
+        font-size: 22px;
+        margin-left: 20px;
+    }
+    .opip{
+        font-family: textaalt;
+        font-size: 15px;
+        margin-top: 10px;
+        margin-left: 20px;
+        border: none;
+        outline: none;
+        height: 230px;
+        padding: 2px;
+        background: #dde1e7;
+        width: 97%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .opip::-webkit-scrollbar{
+        width: 10px;
+    }
+    .opip::-webkit-scrollbar-track{
+        background-color: rgba(169, 169, 169, 0);
+    }
+    
+    /*Collapse box*/
+    /* (A) HIDE CHECKBOX */
+    .togCheck { display: none; }
+
+    /* (B) HIDE CONTENT BY DEFAULT */
+    .togContent {
+        max-height: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: max-height 1s;
+    }
+
+    /* (C) SHOW CONTENT WHEN CHECKED */
+    .togCheck:checked + .togContent {
+        max-height: 100vh; /* any insanely large number if a lot of contents */
+        opacity: 1;
+        visibility: visible;
+    }
+    .togButton {
+        display: block;
+        width: 97%;
+        padding: 12px;
+        color: #000000;
+        background: #dde1e7;
+        /* border-radius: 10px; */
+        cursor: pointer;
+    }
+
+    /* (X3) CONTENT */
+    .togContent { background: #dde1e7; }
+    .togContent p {
+        padding: 20px 30px;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        margin: 0;
+    }
+
+</style>
+<script>
+    function uploadFile(target){
+        document.getElementById("file-name").innerHTML=target.files[0].name;
+        document.getElementById("subspan").innerHTML="Image to Text";
+    }
+    function setCurrentTab(element) {
+        var navItems = document.querySelectorAll('nav li');
+        navItems.forEach(function(item) {
+            item.classList.remove('active');
+        });
+        element.parentNode.classList.add('active');
+        var currentTabIndicator = document.getElementById('current-tab-indicator');
+        currentTabIndicator.style.left = element.offsetLeft + 'px';
+        currentTabIndicator.style.width = element.offsetWidth + 'px';
+    }
+</script>
+<body>
+    <nav>
+        <ul>
+          <li><a href="#" class="active" onclick="setCurrentTab(this)">OCR</a></li>
+          <li><a href="#FAQ" onclick="setCurrentTab(this)">FAQ</a></li>
+          <li><a href="#developers" onclick="setCurrentTab(this)">Developers</a></li>
+          <li id="current-tab-indicator"></li>
+        </ul>
+      </nav>
+      
+    
+    <form action="" method="post" enctype="multipart/form-data" id="ocr">
+        <div style="padding-left: 400px; padding-top: 200px;">
+        <div class="bcontainer">
+        <div class="inputt">
+            <input type="file" id="file" name="file" class="inputfile" onchange="uploadFile(this)" accept="image/*" hidden>
+            <label for="file">
+                <span id="file-name" class="scontainer">No File Chosen</span>
+                <span class="file-button">
+                    <i class="fa fa-upload" aria-hidden="true"></i>
+                    Browse
+                </span>
+            </label>
+        </div>
+            <center style="margin-top: 30px;">
+                <input type="submit" id="submit1" value="Text to Image" hidden/>
+                <label for="submit1" style="padding-top: 20px;">
+                    <span class="submit" id="subspan">Text to Image</span>
+                </label>
+            </center>
+            <span id="op">Output / Input</span>
+            <hr style="width: 97%;">
+            <div>
+                <textarea id="textarea" placeholder="Paste Your Text Here" name="textarea" class="opip">{{mesg}}</textarea> 
+            </div>
+        </div>
+    </div>
+        <div id="FAQ" style="margin-top: 300px; padding: 220px; font-family: textaalt;">
+            <span style="font-size: 30px;">FAQ (Frequently Asked Questions)</span><hr>
+            <div style="box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3); border-radius: 10px;">
+                <div>
+                    <label for="check" class="togButton"><li>What is OCR?</li></label>
+                    <input type="checkbox" class="togCheck" id="check">
+                    <div class="togContent">
+                        <p>OCR stands for "Optical Character Recognition." It is a technology that recognizes text within a digital image. It is commonly used to recognize text in scanned documents and images. OCR software can be used to convert a physical paper document, or an image into an accessible electronic version with text.</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="check2" class="togButton"><li>How to use This OCR System?</li></label>
+                    <input type="checkbox" class="togCheck" id="check2">
+                    <div class="togContent">
+                        <p>Step 1 : Click on Browse Image. <br>
+                        Step 2 : Upload image in our System <br>
+                        Step 3 : Click on Image to text Button <br>
+                        Step 4 : Output will be shown in Textbox</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="check3" class="togButton"><li>Which File format is supported?</li></label>
+                    <input type="checkbox" class="togCheck" id="check3">
+                    <div class="togContent">
+                        <p>Any image with text is supported,example JPG/JPEG, PNG, BMP etc.Image resolution should be 200 DPI or higher to ensure good recognition results.</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="check4" class="togButton"><li>Where is OCR used?</li></label>
+                    <input type="checkbox" class="togCheck" id="check4">
+                    <div class="togContent">
+                        <p>OCR can be used for a variety of applications, including the following: Scanning printed documents into versions that can be edited with word processors, like Microsoft Word or Google Docs. Indexing print material for search engines. Automating data entry, extraction and processing.</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="check5" class="togButton"><li>What is the difference between OCR and scanner?</li></label>
+                    <input type="checkbox" class="togCheck" id="check5">
+                    <div class="togContent">
+                        <p>OCR technology provides a much more sophisticated output compared to scanning as instead of capturing the document as an image, it identifies the characters and converts them into machine-readable text. This process allows you to edit the text, search for keywords, and retrieve information faster.</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="check6" class="togButton"><li>How do I convert Text to image?</li></label>
+                    <input type="checkbox" class="togCheck" id="check6">
+                    <div class="togContent">
+                        <p>Step 1 : Click on input box saying "Paste your text here". <br>
+                        Step 2 : Paste your text.<br>
+                        Step 3 : Click on Text to Image Button <br>
+                        Step 4 : Image will be downloaded soon</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="check7" class="togButton"><li>How does OCR works?</li></label>
+                    <input type="checkbox" class="togCheck" id="check7">
+                    <div class="togContent">
+                        <p>A simple OCR engine works by storing many different font and text image patterns as templates. The OCR software uses pattern-matching algorithms to compare text images, character by character, to its internal database. Our system uses LSTM Model to extract the text.</p>
+                    </div>
+                </div>
+            </div>
+       <div id="developers" style="padding-top: 200px; padding-bottom: 500px;"><span style="font-size: 30px;">Developers</span><hr>
+        <span style="box-shadow: -5px -5px 9px rgba(255,255,255,0.45), 5px 5px 9px rgba(94,104,121,0.3); border-radius: 5px; padding: 10px;">&#9675;<span style="font-size: 25px;"> Ritesh Mahale</span></span><br><br>
+        </div>
+    </form>
+</body>
+</html>
